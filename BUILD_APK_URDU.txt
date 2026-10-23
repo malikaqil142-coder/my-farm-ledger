@@ -1,0 +1,16 @@
+میرا زرعی کھاتہ — APK بنانے کا آسان طریقہ
+
+اس ZIP میں Android پروجیکٹ اور GitHub Actions کی خودکار build فائل شامل ہے۔ اس چیٹ کے ماحول میں Android SDK/Gradle build tools موجود نہیں، اس لیے اصل APK یہیں compile نہیں ہو سکی۔
+
+APK حاصل کرنے کے لیے:
+1) ZIP کو کمپیوٹر پر extract کریں۔
+2) GitHub.com پر اپنے اکاؤنٹ میں نیا خالی repository بنائیں، مثلاً MyFarmLedger۔
+3) ZIP کے اندر موجود تمام فائلیں اور .github فولڈر سمیت repository میں upload/commit کریں۔ فائلیں repository کی root میں ہوں، یعنی build.gradle.kts اور app فولڈر root پر نظر آئیں۔
+4) GitHub repository میں Actions ٹیب کھولیں۔ “Build My Farm Ledger APK” workflow منتخب کریں اور “Run workflow” دبائیں۔
+5) Build مکمل ہونے کے بعد workflow run کھولیں۔ نیچے Artifacts میں “MyFarmLedger-debug-apk” ڈاؤن لوڈ کریں۔
+6) ZIP کھولیں؛ اس میں app-debug.apk ہوگا۔ اسے Android فون میں منتقل کرکے انسٹال کریں۔ فون پوچھے تو صرف اسی فائل مینیجر/براؤزر کے لیے “Install unknown apps” اجازت دیں جس سے APK کھول رہے ہیں۔
+
+نوٹ:
+- GitHub اکاؤنٹ یا لاگ اِن پاس ورڈ کسی کو نہ دیں۔
+- یہ debug APK ہوگی، Play Store والی signed release نہیں۔
+- موجودہ ایپ کا ڈیٹا اسی ڈیوائس/ایپ کے اندر محفوظ ہوتا ہے؛ email/password login اور cloud sync ابھی شامل نہیں۔

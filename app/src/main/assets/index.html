@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>میرا زرعی کھاتہ | My Farm Ledger</title>
+<style>
+:root{--green:#176b45;--mint:#e8f5ec;--ink:#18332a;--line:#d9e5dc;--paper:#fff;--bg:#f3f7f3;--gold:#e9b949}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,"Noto Nastaliq Urdu",Arial,sans-serif}
+header{background:linear-gradient(120deg,#124d35,#218455);color:white;padding:22px max(16px,calc((100% - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:25px}header p{margin:7px 0 0;color:#e0f4e7;font-size:13px}.lang,button,select,input,textarea{font:inherit}
+button{border:0;border-radius:10px;padding:10px 14px;background:var(--green);color:#fff;cursor:pointer;font-weight:700}button.secondary{background:#edf5ef;color:var(--green);border:1px solid var(--line)}button.danger{background:#a93232}button.small{padding:6px 9px;font-size:12px}
+.lang{border:1px solid #ffffff80;background:#ffffff1c;color:white;border-radius:9px;padding:8px}
+main{max-width:1100px;margin:20px auto;padding:0 14px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat,.panel{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 3px 12px #173a2010}.stat span{font-size:13px;color:#61776a}.stat strong{display:block;font-size:24px;margin-top:7px;color:var(--green)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.tabs button{background:#e5eee7;color:#2b6044}.tabs button.active{background:var(--green);color:white}
+.panel h2{font-size:19px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:13px;font-weight:bold;color:#496353}.field input,.field select,.field textarea{border:1px solid #cbd9ce;border-radius:9px;padding:10px;background:white;color:#173328;width:100%;min-width:0}.field textarea{min-height:72px}
+.full{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.muted{color:#718278;font-size:13px}.table-wrap{overflow:auto;margin-top:14px}table{width:100%;border-collapse:collapse;min-width:620px}th,td{text-align:right;padding:10px;border-bottom:1px solid var(--line);font-size:13px}th{background:var(--mint);color:#285a3f}.thumb{width:52px;height:42px;object-fit:cover;border-radius:7px}.empty{text-align:center;padding:28px;color:#708176}.hidden{display:none!important}.badge{display:inline-block;background:#e4f3e8;color:#176b45;border-radius:20px;padding:4px 8px;font-size:12px}
+#toast{position:fixed;bottom:16px;left:16px;background:#173e2c;color:white;padding:12px 16px;border-radius:10px;display:none;z-index:5}.backup{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.section-note{background:#fff8e4;border:1px solid #f1df9d;padding:11px;border-radius:10px;font-size:13px;margin-bottom:12px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr 1fr}header{padding:18px 14px}.stat strong{font-size:20px}}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.full{grid-column:auto}h1{font-size:22px}}
+</style></head>
+<body>
+<header><div><h1 id="brand">🌱 میرا زرعی کھاتہ</h1><p id="tagline">ہر کھیت، ہر فصل اور ہر ایکڑ کا آسان حساب</p></div><select class="lang" id="language" aria-label="Language"><option value="ur">اردو</option><option value="en">English</option></select></header>
+<main>
+<div class="stats">
+<div class="stat"><span data-i="fields">کل کھیت</span><strong id="sFields">0</strong></div>
+<div class="stat"><span data-i="acres">کل ایکڑ</span><strong id="sAcres">0</strong></div>
+<div class="stat"><span data-i="expense">کل خرچہ</span><strong id="sExpense">Rs 0</strong></div>
+<div class="stat"><span data-i="profit">خالص آمدنی</span><strong id="sProfit">Rs 0</strong></div>
+</div>
+<div class="tabs">
+<button class="active" data-tab="fields" data-i="fieldsTab">کھیت اور فصل</button>
+<button data-tab="entry" data-i="entryTab">خرچہ درج کریں</button>
+<button data-tab="report" data-i="reportTab">رپورٹ</button>
+<button data-tab="backup" data-i="backupTab">بیک اپ</button>
+</div>
+<section class="panel" id="fields">
+<h2 data-i="addField">نیا کھیت / فصل شامل کریں</h2>
+<div class="section-note" data-i="photoNote">ہر کھیت کی تصویر اپلوڈ کر سکتے ہیں۔ تصاویر اور ریکارڈ اسی براؤزر میں محفوظ ہوتے ہیں۔</div>
+<form id="fieldForm"><div class="grid">
+<div class="field"><label data-i="fieldName">کھیت کا نام</label><input id="fName" required placeholder="مثلاً چک والا کھیت"></div>
+<div class="field"><label data-i="crop">فصل</label><select id="fCrop"><option>گندم</option><option>کپاس</option><option>چاول</option><option>گنا</option><option>مکئی</option><option>چارہ</option><option>دیگر</option></select></div>
+<div class="field"><label data-i="acresLabel">رقبہ (ایکڑ)</label><input id="fAcres" type="number" min="0.01" step="0.01" required></div>
+<div class="field"><label data-i="season">فصل کا سال / سیزن</label><input id="fSeason" placeholder="مثلاً 2026-27"></div>
+<div class="field"><label data-i="sowing">بجائی کی تاریخ</label><input id="fSowing" type="date"></div>
+<div class="field"><label data-i="ownership">زمین کی نوعیت</label><select id="fOwn"><option value="own">اپنی</option><option value="lease">ٹھیکہ</option></select></div>
+<div class="field full"><label data-i="photo">کھیت کی تصویر</label><input id="fPhoto" type="file" accept="image/*"></div>
+<div class="field full"><label data-i="notes">نوٹس</label><textarea id="fNotes" placeholder="پانی، مٹی یا کھیت کی دوسری معلومات"></textarea></div>
+</div><div class="actions"><button type="submit" data-i="saveField">کھیت محفوظ کریں</button><button type="reset" class="secondary" data-i="clear">صاف کریں</button></div></form>
+<div class="table-wrap"><table><thead><tr><th data-i="photo">تصویر</th><th data-i="fieldName">کھیت</th><th data-i="crop">فصل</th><th data-i="acresLabel">ایکڑ</th><th data-i="season">سیزن</th><th data-i="spent">خرچہ</th><th data-i="action">عمل</th></tr></thead><tbody id="fieldRows"></tbody></table></div>
+</section>
+<section class="panel hidden" id="entry">
+<h2 data-i="addExpense">خرچہ یا آمدنی درج کریں</h2>
+<form id="expenseForm"><div class="grid">
+<div class="field"><label data-i="selectField">کھیت منتخب کریں</label><select id="eField" required></select></div>
+<div class="field"><label data-i="date">تاریخ</label><input id="eDate" type="date" required></div>
+<div class="field"><label data-i="type">اندراج کی قسم</label><select id="eType"><option value="expense">خرچہ</option><option value="income">آمدنی</option></select></div>
+<div class="field"><label data-i="category">کام / مد</label><select id="eCat"><option>بجائی</option><option>ہل / روٹاویٹر</option><option>بیج</option><option>کھاد</option><option>سپرے</option><option>پانی / ڈیزل</option><option>مزدوری</option><option>کٹائی</option><option>ٹرانسپورٹ</option><option>ٹھیکہ</option><option>فصل فروخت</option><option>دیگر</option></select></div>
+<div class="field"><label data-i="amount">کل رقم (روپے)</label><input id="eAmount" type="number" min="0" step="0.01" required></div>
+<div class="field"><label data-i="quantity">مقدار (اختیاری)</label><input id="eQty" placeholder="مثلاً 5 بوری / 2 گھنٹے"></div>
+<div class="field full"><label data-i="details">تفصیل / نوٹس</label><textarea id="eNotes"></textarea></div>
+</div><div class="actions"><button type="submit" data-i="saveEntry">اندراج محفوظ کریں</button></div></form>
+<div class="table-wrap"><table><thead><tr><th data-i="date">تاریخ</th><th data-i="fieldName">کھیت</th><th data-i="type">قسم</th><th data-i="category">مد</th><th data-i="amount">رقم</th><th data-i="perAcre">فی ایکڑ</th><th data-i="action">عمل</th></tr></thead><tbody id="expenseRows"></tbody></table></div>
+</section>
+<section class="panel hidden" id="report">
+<h2 data-i="reportTitle">فصل وار حساب</h2><div class="grid">
+<div class="field"><label data-i="filterField">کھیت کے مطابق فلٹر</label><select id="rField"><option value="all">تمام کھیت</option></select></div>
+<div class="field"><label data-i="filterYear">سیزن</label><select id="rSeason"><option value="all">تمام سیزن</option></select></div>
+</div><div class="table-wrap"><table><thead><tr><th data-i="fieldName">کھیت</th><th data-i="crop">فصل</th><th data-i="acresLabel">ایکڑ</th><th data-i="totalCost">کل خرچہ</th><th data-i="perAcre">فی ایکڑ خرچہ</th><th data-i="income">آمدنی</th><th data-i="net">نفع / نقصان</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+<p class="muted" data-i="reportNote">فی ایکڑ حساب متعلقہ کھیت کے رقبے سے تقسیم کر کے نکالا گیا ہے۔</p>
+</section>
+<section class="panel hidden" id="backup"><h2 data-i="backupTitle">ڈیٹا محفوظ کریں</h2><p data-i="backupNote">یہ ابتدائی ورژن ریکارڈ اسی براؤزر میں محفوظ کرتا ہے۔ موبائل اور کمپیوٹر کے درمیان ڈیٹا خودکار طور پر شیئر نہیں ہوتا؛ بیک اپ فائل ایک ڈیوائس سے دوسری پر منتقل کریں۔</p>
+<div class="backup"><button class="exportBtn" data-i="export">بیک اپ ڈاؤن لوڈ کریں</button><label class="secondary" style="padding:10px 14px;border-radius:10px;cursor:pointer"><span data-i="import">بیک اپ بحال کریں</span><input id="importFile" type="file" accept="application/json" hidden></label><button class="danger clearAllBtn" data-i="clearAll">تمام ڈیٹا ختم کریں</button></div>
+<p class="muted" data-i="privacy">اہم: براؤزر کا ڈیٹا صاف کرنے سے پہلے بیک اپ ضرور بنائیں۔</p></section>
+<footer class="muted" style="padding:18px 4px;text-align:center">🌾 <span id="foot">میرا زرعی کھاتہ — آسان زرعی حساب</span></footer>
+</main><div id="toast"></div>
+<script>
+const translations={
+ur:{brand:"🌱 میرا کھیت",tagline:"ہر کھیت، ہر فصل اور ہر ایکڑ کا آسان حساب",fields:"کل کھیت",acres:"کل ایکڑ",expense:"کل خرچہ",profit:"خالص آمدنی",fieldsTab:"کھیت اور فصل",entryTab:"خرچہ درج کریں",reportTab:"رپورٹ",backupTab:"بیک اپ",addField:"نیا کھیت / فصل شامل کریں",photoNote:"ہر کھیت کی تصویر اپلوڈ کر سکتے ہیں۔ تصاویر اور ریکارڈ اسی براؤزر میں محفوظ ہوتے ہیں۔",fieldName:"کھیت کا نام",crop:"فصل",acresLabel:"رقبہ (ایکڑ)",season:"فصل کا سال / سیزن",sowing:"بجائی کی تاریخ",ownership:"زمین کی نوعیت",photo:"کھیت کی تصویر",notes:"نوٹس",saveField:"کھیت محفوظ کریں",clear:"صاف کریں",spent:"خرچہ",action:"عمل",addExpense:"خرچہ یا آمدنی درج کریں",selectField:"کھیت منتخب کریں",date:"تاریخ",type:"اندراج کی قسم",category:"کام / مد",amount:"کل رقم (روپے)",quantity:"مقدار (اختیاری)",details:"تفصیل / نوٹس",saveEntry:"اندراج محفوظ کریں",perAcre:"فی ایکڑ",reportTitle:"فصل وار حساب",filterField:"کھیت کے مطابق فلٹر",filterYear:"سیزن",totalCost:"کل خرچہ",income:"آمدنی",net:"نفع / نقصان",reportNote:"فی ایکڑ حساب متعلقہ کھیت کے رقبے سے تقسیم کر کے نکالا گیا ہے۔",backupTitle:"ڈیٹا محفوظ کریں",backupNote:"یہ ابتدائی ورژن ریکارڈ اسی براؤزر میں محفوظ کرتا ہے۔ موبائل اور کمپیوٹر کے درمیان ڈیٹا خودکار طور پر شیئر نہیں ہوتا؛ بیک اپ فائل ایک ڈیوائس سے دوسری پر منتقل کریں۔",export:"بیک اپ ڈاؤن لوڈ کریں",import:"بیک اپ بحال کریں",clearAll:"تمام ڈیٹا ختم کریں",privacy:"اہم: براؤزر کا ڈیٹا صاف کرنے سے پہلے بیک اپ ضرور بنائیں۔",own:"اپنی",lease:"ٹھیکہ",expenseType:"خرچہ",incomeType:"آمدنی",delete:"حذف",noFields:"ابھی کوئی کھیت شامل نہیں کیا گیا۔",noEntries:"ابھی کوئی اندراج نہیں۔",saved:"ریکارڈ محفوظ ہوگیا",confirmDelete:"کیا آپ یہ ریکارڈ حذف کرنا چاہتے ہیں؟",confirmAll:"کیا واقعی تمام کھیت، تصاویر اور اخراجات حذف کرنے ہیں؟",imported:"بیک اپ بحال ہوگیا",badFile:"یہ بیک اپ فائل درست نہیں۔",foot:"میرا کھیت — آسان زرعی حساب",all:"تمام کھیت",noReport:"کوئی ریکارڈ نہیں"},
+en:{brand:"🌱 My Farm",tagline:"Simple records for every field, crop and acre",fields:"Fields",acres:"Total acres",expense:"Total expenses",profit:"Net income",fieldsTab:"Fields & Crops",entryTab:"Add Transaction",reportTab:"Reports",backupTab:"Backup",addField:"Add a field / crop",photoNote:"Upload a photo for each field. Photos and records are stored in this browser.",fieldName:"Field name",crop:"Crop",acresLabel:"Area (acres)",season:"Crop year / season",sowing:"Sowing date",ownership:"Land type",photo:"Field photo",notes:"Notes",saveField:"Save field",clear:"Clear",spent:"Expenses",action:"Action",addExpense:"Add an expense or income",selectField:"Select field",date:"Date",type:"Transaction type",category:"Activity / category",amount:"Total amount (PKR)",quantity:"Quantity (optional)",details:"Details / notes",saveEntry:"Save transaction",perAcre:"Per acre",reportTitle:"Crop-wise summary",filterField:"Filter by field",filterYear:"Season",totalCost:"Total expenses",income:"Income",net:"Profit / loss",reportNote:"Per-acre figures are calculated by dividing the amount by the field area.",backupTitle:"Save your data",backupNote:"This starter version stores records in this browser. Data does not sync automatically between phone and computer; transfer a backup file between devices.",export:"Download backup",import:"Restore backup",clearAll:"Delete all data",privacy:"Important: download a backup before clearing browser data.",own:"Owned",lease:"Leased",expenseType:"Expense",incomeType:"Income",delete:"Delete",noFields:"No fields added yet.",noEntries:"No transactions yet.",saved:"Record saved",confirmDelete:"Delete this record?",confirmAll:"Delete all fields, photos and transactions?",imported:"Backup restored",badFile:"This backup file is invalid.",foot:"My Farm — Simple farm ledger",all:"All fields",noReport:"No records"}
+};
+let lang="ur",data=load();function load(){try{return JSON.parse(localStorage.getItem("myFarmData")||'{"fields":[],"entries":[]}')}catch(e){return {fields:[],entries:[]}}}
+const $=id=>document.getElementById(id), t=k=>translations[lang][k]||k, money=n=>"Rs "+Number(n||0).toLocaleString("en-PK",{maximumFractionDigits:2});
+function save(){try{localStorage.setItem("myFarmData",JSON.stringify(data));render()}catch(e){toast("Storage is full. Download a backup and use smaller photos.");}}
+function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",2600)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function sums(fid){let es=data.entries.filter(e=>e.fieldId===fid),cost=es.filter(e=>e.type==="expense").reduce((a,e)=>a+ +e.amount,0),income=es.filter(e=>e.type==="income").reduce((a,e)=>a+ +e.amount,0);return {cost,income,net:income-cost}}
+function applyLang(){document.documentElement.lang=lang;document.documentElement.dir=lang==="ur"?"rtl":"ltr";document.querySelectorAll("[data-i]").forEach(el=>{let k=el.dataset.i;if(translations[lang][k])el.textContent=t(k)});$("brand").textContent=t("brand");$("tagline").textContent=t("tagline");$("foot").textContent=t("foot");$("language").value=lang;render()}
+function render(){let acres=data.fields.reduce((a,f)=>a+ +f.acres,0),cost=data.entries.filter(e=>e.type==="expense").reduce((a,e)=>a+ +e.amount,0),inc=data.entries.filter(e=>e.type==="income").reduce((a,e)=>a+ +e.amount,0);
+$("sFields").textContent=data.fields.length;$("sAcres").textContent=acres.toLocaleString();$("sExpense").textContent=money(cost);$("sProfit").textContent=money(inc-cost);
+$("fieldRows").innerHTML=data.fields.length?data.fields.map(f=>`<tr><td>${f.photo?`<img class="thumb" src="${f.photo}" alt="field">`:"—"}</td><td>${esc(f.name)}<br><span class="muted">${esc(f.notes||"")}</span></td><td>${esc(f.crop)}</td><td>${f.acres}</td><td>${esc(f.season||"—")}</td><td>${money(sums(f.id).cost)}</td><td><button class="small danger" onclick="delField('${f.id}')">${t("delete")}</button></td></tr>`).join(""):`<tr><td colspan="7" class="empty">${t("noFields")}</td></tr>`;
+let options=data.fields.map(f=>`<option value="${f.id}">${esc(f.name)} — ${esc(f.crop)} (${f.acres} ac)</option>`).join("");let prev=$("eField").value;$("eField").innerHTML=options;$("eField").value=data.fields.some(f=>f.id===prev)?prev:(data.fields[0]?.id||"");let rp=$("rField").value;$("rField").innerHTML=`<option value="all">${t("all")}</option>`+data.fields.map(f=>`<option value="${f.id}">${esc(f.name)}</option>`).join("");$("rField").value=(rp==="all"||data.fields.some(f=>f.id===rp))?rp:"all";
+$("expenseRows").innerHTML=data.entries.length?data.entries.slice().reverse().map(e=>{let f=data.fields.find(f=>f.id===e.fieldId),ac=+(f?.acres||0);return `<tr><td>${esc(e.date)}</td><td>${esc(f?.name||"—")}</td><td><span class="badge">${e.type==="expense"?t("expenseType"):t("incomeType")}</span></td><td>${esc(e.category)}<br><span class="muted">${esc(e.qty||"")}</span></td><td>${money(e.amount)}</td><td>${money(ac?e.amount/ac:0)}</td><td><button class="small danger" onclick="delEntry('${e.id}')">${t("delete")}</button></td></tr>`}).join(""):`<tr><td colspan="7" class="empty">${t("noEntries")}</td></tr>`;
+let seasons=[...new Set(data.fields.map(f=>f.season).filter(Boolean))],s=$("rSeason").value;$("rSeason").innerHTML=`<option value="all">${t("all")}</option>`+seasons.map(v=>`<option>${esc(v)}</option>`).join("");if(seasons.includes(s))$("rSeason").value=s;renderReport()}
+function renderReport(){let fid=$("rField").value,season=$("rSeason").value,fs=data.fields.filter(f=>(fid==="all"||f.id===fid)&&(season==="all"||f.season===season));$("reportRows").innerHTML=fs.length?fs.map(f=>{let s=sums(f.id);return `<tr><td>${esc(f.name)}</td><td>${esc(f.crop)}</td><td>${f.acres}</td><td>${money(s.cost)}</td><td>${money(s.cost/f.acres)}</td><td>${money(s.income)}</td><td>${money(s.net)}</td></tr>`}).join(""):`<tr><td colspan="7" class="empty">${t("noReport")}</td></tr>`}
+$("language").addEventListener("change",e=>{lang=e.target.value;applyLang()});
+document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));["fields","entry","report","backup"].forEach(id=>$(id).classList.toggle("hidden",id!==b.dataset.tab));if(b.dataset.tab==="report")renderReport()});
+$("fieldForm").onsubmit=async e=>{e.preventDefault();let photo="";let file=$("fPhoto").files[0];if(file){if(file.size>1.5*1024*1024){toast(lang==="ur"?"تصویر 1.5 MB سے چھوٹی منتخب کریں":"Choose a photo smaller than 1.5 MB");return}photo=await new Promise((resolve,reject)=>{let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+data.fields.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),name:$("fName").value.trim(),crop:$("fCrop").value,acres:+$("fAcres").value,season:$("fSeason").value.trim(),sowing:$("fSowing").value,ownership:$("fOwn").value,photo,notes:$("fNotes").value.trim()});save();e.target.reset();toast(t("saved"))};
+$("expenseForm").onsubmit=e=>{e.preventDefault();if(!data.fields.some(f=>f.id===$("eField").value)){toast(lang==="ur"?"پہلے کھیت شامل کریں":"Add a field first");return}data.entries.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),fieldId:$("eField").value,date:$("eDate").value,type:$("eType").value,category:$("eCat").value,amount:+$("eAmount").value,qty:$("eQty").value.trim(),notes:$("eNotes").value.trim()});save();e.target.reset();$("eDate").value=new Date().toISOString().slice(0,10);toast(t("saved"))};
+window.delField=id=>{if(!confirm(t("confirmDelete")))return;data.fields=data.fields.filter(f=>f.id!==id);data.entries=data.entries.filter(e=>e.fieldId!==id);save()};
+window.delEntry=id=>{if(!confirm(t("confirmDelete")))return;data.entries=data.entries.filter(e=>e.id!==id);save()};
+$("rField").onchange=renderReport;$("rSeason").onchange=renderReport;$("eDate").value=new Date().toISOString().slice(0,10);
+document.querySelectorAll(".exportBtn").forEach(btn=>btn.onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="my-farm-backup.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+$("importFile").onchange=e=>{let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.fields)||!Array.isArray(d.entries))throw Error();data=d;save();toast(t("imported"))}catch(err){toast(t("badFile"))}};r.readAsText(file);e.target.value=""};
+document.querySelectorAll(".clearAllBtn").forEach(btn=>btn.onclick=()=>{if(confirm(t("confirmAll"))){data={fields:[],entries:[]};save()}});
+applyLang();
+</script></body></html>
